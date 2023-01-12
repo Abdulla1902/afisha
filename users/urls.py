@@ -3,6 +3,6 @@ from users import views
 
 
 urlpatterns = [
-    path('authorization/', views.authorization_view),
-    path('registration/', views.registration_view)
+    path('authorization/', views.AuthorizeAPIView.as_view()),
+    path('registration/', views.RegisterAPIView.as_view())
 ]
