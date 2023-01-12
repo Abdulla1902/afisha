@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from movie_app.admin import Director, Movie, Review
-from movie_app.serializer import DirectorSerializer, MovieSerializer, ReviewSerializer
+from movie_app.serializer import DirectorSerializer, MovieSerializer, ReviewSerializer, MovieValidateSerializer, DirectorsValidateSerializer, ReviewValidateSerializer
 from rest_framework import status
 
 
@@ -15,7 +15,11 @@ def director_view(request):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        name = request.data.get('name')
+        serializer = DirectorsValidateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(data={'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+        name = serializer.validated_data.get('name')
         director = Director.objects.create(name=name)
     return Response(data={'MESSAGE': 'data received!'})
 
@@ -51,10 +55,14 @@ def movie_view(request):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        title = request.data.get('title')
-        description = request.data.get('description')
-        duration = request.data.get('duration')
-        director = request.data.get('Director')
+        serializer = MovieValidateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(data={'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+        title = serializer.validated_data.get('title')
+        description = serializer.validated_data.get('description')
+        duration = serializer.validated_data.get('duration')
+        director = serializer.validated_data.get('Director')
         movie = Movie.objects.create(title=title, description=description, duration=duration, director=director)
         return Response(data={'MESSAGE': 'data received!'})
 
@@ -93,9 +101,13 @@ def review_view(request):
 
         return Response(data=serializer.data, status=status.HTTP_200_OK)
     elif request.method == 'POST':
-        text = request.data.get('text')
-        stars = request.data.get('stars')
-        movie = request.data.get('movie')
+        serializer = ReviewValidateSerializer(data=request.data)
+        if not serializer.is_valid():
+            return Response(data={'errors': serializer.errors},
+                            status=status.HTTP_400_BAD_REQUEST)
+        text = serializer.validated_data.get('text')
+        stars = serializer.validated_data.get('stars')
+        movie = serializer.validated_data.get('movie')
         review = Review.objects.create(text=text, stars=stars, movie_id=movie)
         return Response(data={'MESSAGE': 'data received!'})
 
