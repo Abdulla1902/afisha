@@ -1,7 +1,7 @@
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from .models import Director, Movie, Review
-from .serializers import DirectorSerializer, MovieSerializer, ReviewSerializer
+from movie_app.admin import Director, Movie, Review
+from movie_app.serializer import DirectorSerializer, MovieSerializer, ReviewSerializer
 from rest_framework import status
 
 
@@ -18,6 +18,11 @@ def director_view(request):
 
 @api_view(['GET'])
 def director_detail_view(request, **kwargs):
+    try:
+        director = Director.objects.get(id=kwargs['id'])
+    except Director.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND,
+                        data={'message': 'Post not found!'})
     if request.method == 'GET':
         director = Director.objects.get(id=kwargs['id'])
 
@@ -38,6 +43,11 @@ def movie_view(request):
 
 @api_view(['GET'])
 def movie_detail_view(request, **kwargs):
+    try:
+        movie = Movie.objects.get(id=kwargs['id'])
+    except Movie.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND,
+                        data={'message': 'Movie not found!'})
     if request.method == 'GET':
         movie = Movie.objects.get(id=kwargs['id'])
 
@@ -58,6 +68,11 @@ def review_view(request):
 
 @api_view(['GET'])
 def review_detail_view(request, **kwargs):
+    try:
+        review = Review.objects.get(id=kwargs['id'])
+    except Review.DoesNotExist:
+        return Response(status=status.HTTP_404_NOT_FOUND,
+                        data={'message': 'Review not found!'})
     if request.method == 'GET':
         review = Review.objects.get(id=kwargs['id'])
 
