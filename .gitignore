@@ -1,9 +1,8 @@
-venv
 .idea
-.vscode
-pycache/
-*.py[cod]
-*.so
 db.sqlite3
+venv
 static
 media
+__pycache__/
+test.py
+.env
