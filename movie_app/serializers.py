@@ -19,7 +19,7 @@ class MovieSerializer(serializers.ModelSerializer):
 
     def get_rating(self, movie):
         stars_list = [review.stars for review in movie.reviews.all()]
-        return sum(stars_list) / len(stars_list)
+        return sum(stars_list) / max(1, len(stars_list))
 
 
 class DirectorSerializer(serializers.ModelSerializer):
